@@ -16,6 +16,17 @@ class _HomePageState extends State<HomePage> {
 
   List _toDoList = [];
 
+  @override
+  void initState() {
+    super.initState();
+
+    _readData().then((value) {
+      setState(() {
+        _toDoList = jsonDecode(value);
+      });
+    });
+  }
+
   void _addToDo() {
     setState(() {
       Map<String, dynamic> newToDo = Map();
@@ -23,6 +34,7 @@ class _HomePageState extends State<HomePage> {
       _toDoController.text = "";
       newToDo["ok"] = false;
       _toDoList.add(newToDo);
+      _saveData();
     });
   }
 
@@ -69,21 +81,44 @@ class _HomePageState extends State<HomePage> {
             child: ListView.builder(
               padding: EdgeInsets.only(top: 10.0),
               itemCount: _toDoList.length,
-              itemBuilder: (context, index) {
-                return CheckboxListTile(
-                  secondary: CircleAvatar(
-                    child: Icon(
-                      _toDoList[index]["ok"] ? Icons.check : Icons.error,
-                    ),
-                  ),
-                  value: _toDoList[index]["ok"],
-                  title: Text(_toDoList[index]["title"]),
-                  onChanged: null,
-                );
-              },
+              itemBuilder: _buildItem,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildItem(context, index) {
+    return Dismissible(
+      key: Key(
+        DateTime.now().millisecondsSinceEpoch.toString(),
+      ),
+      background: Container(
+        color: Colors.red,
+        child: Align(
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+        alignment: Alignment(-0.9, 0.0),
+      ),
+      direction: DismissDirection.startToEnd,
+      child: CheckboxListTile(
+        secondary: CircleAvatar(
+          child: Icon(
+            _toDoList[index]["ok"] ? Icons.check : Icons.error,
+          ),
+        ),
+        value: _toDoList[index]["ok"],
+        title: Text(_toDoList[index]["title"]),
+        onChanged: (c) {
+          setState(() {
+            _toDoList[index]["ok"] = c;
+            _saveData();
+          });
+        },
       ),
     );
   }
