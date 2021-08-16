@@ -16,7 +16,45 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Lista de Tarefa"),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Nova Tatrefa",
+                      labelStyle: TextStyle(
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blueAccent),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: Text("ADD"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<File> _getFile() async {
